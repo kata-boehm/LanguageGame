@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Challenge - Vienna</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background: url('https://www.cash.at/news/media/18/Eingang-Billa-Corso-Flughafen-170512-detail.jpeg') no-repeat center center fixed;
+            background-size: cover;
+        }
+        .container {
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 600px;
+            margin: 180px auto;
+            text-align: center;
+            background: white;
+        }
+        .shopping-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Shopping Challenge in Vienna</h1>
+        <p>Your host mum has sent you food shopping! Click on each item and enter the correct English translation.</p>
+        
+        <div class="shopping-list">
+            <h2>Shopping List</h2>
+            <ul id="shoppingList"></ul>
+        </div>
+        
+        <button id="restartButton" style="display: none;" onclick="startGame()">Restart Game</button>
+    </div>
+
+    <script>
+        const allItems = [
+            { german: "Apfel", english: "apple" }, { german: "Banane", english: "banana" },
+            { german: "Kirsche", english: "cherry" }, { german: "Traube", english: "grape" },
+            { german: "Erdbeere", english: "strawberry" }, { german: "Milch", english: "milk" },
+            { german: "Brot", english: "bread" }, { german: "Käse", english: "cheese" },
+            { german: "Butter", english: "butter" }, { german: "Ei", english: "egg" },
+            { german: "Tomate", english: "tomato" }, { german: "Gurke", english: "cucumber" },
+            { german: "Zwiebel", english: "onion" }, { german: "Kartoffel", english: "potato" },
+            { german: "Karotte", english: "carrot" }, { german: "Paprika", english: "pepper" },
+            { german: "Fisch", english: "fish" }, { german: "Hähnchen", english: "chicken" },
+            { german: "Rindfleisch", english: "beef" }, { german: "Schinken", english: "ham" },
+            { german: "Wurst", english: "sausage" }, { german: "Joghurt", english: "yogurt" },
+            { german: "Honig", english: "honey" }, { german: "Marmelade", english: "jam" },
+            { german: "Mehl", english: "flour" }, { german: "Zucker", english: "sugar" },
+            { german: "Salz", english: "salt" }, { german: "Pfeffer", english: "pepper" },
+            { german: "Essig", english: "vinegar" }, { german: "Öl", english: "oil" },
+            { german: "Wasser", english: "water" }, { german: "Saft", english: "juice" },
+            { german: "Kaffee", english: "coffee" }, { german: "Tee", english: "tea" }
+        ];
+        
+        let selectedItems = [];
+
+        function getRandomItems() {
+            selectedItems = allItems.sort(() => 0.5 - Math.random()).slice(0, 5);
+        }
+
+        function startGame() {
+            getRandomItems();
+            document.getElementById("shoppingList").innerHTML = "";
+            document.getElementById("restartButton").style.display = "none";
+            
+            selectedItems.forEach((item, index) => {
+                let listItem = document.createElement("li");
+                listItem.id = `listItem${index}`;
+                listItem.innerHTML = `${item.german} <span class='list-status'>❌</span>`;
+                listItem.onclick = () => promptTranslation(index);
+                document.getElementById("shoppingList").appendChild(listItem);
+            });
+        }
+
+        function promptTranslation(index) {
+            let userAnswer = prompt(`Translate "${selectedItems[index].german}" into English:`);
+            let listItem = document.getElementById(`listItem${index}`).querySelector('.list-status');
+            
+            if (userAnswer && userAnswer.trim().toLowerCase() === selectedItems[index].english) {
+                listItem.innerText = "✔️";
+                checkCompletion();
+            } else {
+                alert(`Wrong! The correct answer is: ${selectedItems[index].english}`);
+            }
+        }
+
+        function checkCompletion() {
+            let allCorrect = [...document.querySelectorAll('.list-status')].every(el => el.innerText === "✔️");
+            if (allCorrect) {
+                alert("Congratulations, you are Master of Einkaufen!");
+                document.getElementById("restartButton").style.display = "block";
+            }
+        }
+
+        startGame();
+    </script>
+</body>
+</html>
